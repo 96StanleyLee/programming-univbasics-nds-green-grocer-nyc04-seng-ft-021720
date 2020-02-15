@@ -1,25 +1,16 @@
 def find_item_by_name_in_collection(name, collection)
-  # Implement me first!
-  #
-  # Consult README for inputs and outputs
-
   i = 0
   while i < collection.length do
-     if name === collection[i][:item]
-       return collection[i]
-     end
+    return collection[i] if name === collection[i][:item]
     i += 1
   end
   nil
 end
 
 def consolidate_cart(cart)
-  # Consult README for inputs and outputs
-  #
-  # REMEMBER: This returns a new Array that represents the cart. Don't merely
-  # change `cart` (i.e. mutate) it. It's easier to return a new thing
+  i = 0
   result = []
-  i = 0 
+
   while i < cart.count do
     item_name = cart[i][:item]
     sought_item = find_item_by_name_in_collection(item_name, result)
@@ -31,8 +22,28 @@ def consolidate_cart(cart)
     end
     i += 1
   end
-    result 
-  
+
+  result
+end
+
+# Don't forget, you can make methods to make your life easy!
+
+def mk_coupon_hash(c)
+  rounded_unit_price = (c[:cost].to_f * 1.0 / c[:num]).round(2)
+  {
+    :item => "#{c[:item]} W/COUPON",
+    :price => rounded_unit_price,
+    :count => c[:num]
+  }
+end
+
+# A nice "First Order" method to use in apply_coupons
+
+def apply_coupon_to_cart(matching_item, coupon, cart)
+  matching_item[:count] -= coupon[:num]
+  item_with_coupon = mk_coupon_hash(coupon)
+  item_with_coupon[:clearance] = matching_item[:clearance]
+  cart << item_with_coupon
 end
 
 def apply_coupons(cart, coupons)
